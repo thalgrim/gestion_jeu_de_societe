@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gestion_jeu_de_societe/BoardGameAdd.dart';
 import 'package:gestion_jeu_de_societe/BoardGameModel.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'DataBaseProvider.dart';
+
+import 'dart:io';
+
+import 'dart:async';
+
+import 'dart:convert';
 
 void main() => runApp(MaterialApp(home: MyApp()));
 
@@ -12,6 +19,24 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Widget boardGameCard(BoardGame boardGame) {
+    return Card(
+      child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [Text('Nom : '+boardGame.nom), Text('Auteur : '+boardGame.editeur)],
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [Text('De '+boardGame.nbrJoueurMin.toString()+' à '+boardGame.nbrJoueurMax.toString()+' joueurs')],
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [Image.memory(base64Decode(boardGame.photo))],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,10 +56,7 @@ class _MyAppState extends State<MyApp> {
                   onDismissed: (direction) {
                     DBProvider.db.deleteBoardGame(item.id);
                   },
-                  child: ListTile(
-                    title: Text(item.nom),
-                    leading: Text(item.id.toString()),
-                  ),
+                  child: boardGameCard(item)
                 );
               },
             );

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gestion_jeu_de_societe/main.dart';
 
@@ -7,6 +9,8 @@ import 'DataBaseProvider.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'dart:io';
+
+import 'dart:async';
 
 class BoardGameAdd extends StatelessWidget {
   BoardGameAdd({this.title});
@@ -59,7 +63,7 @@ class _DisplayBoardGameAddState extends State<DisplayBoardGameAdd> {
     );
   }
 
-  Widget boutonAjouterPhoto(){
+  Widget boutonAjouterPhoto() {
     return RaisedButton(
       onPressed: () {
         getImage();
@@ -82,7 +86,9 @@ class _DisplayBoardGameAddState extends State<DisplayBoardGameAdd> {
         jds.editeur = _editeur;
         jds.auteur = _auteur;
         jds.descritpion = _description;
-        jds.photo = _image as String;
+        List<int> imageBytes = _image.readAsBytesSync();
+        String photoBase64 = base64Encode(imageBytes);
+        jds.photo = photoBase64;
         await DBProvider.db.newBoardGame(jds);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyApp()));
@@ -119,7 +125,7 @@ class _DisplayBoardGameAddState extends State<DisplayBoardGameAdd> {
   final picker = ImagePicker();
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.camera,maxHeight:  200 , maxWidth: 200 );
 
     setState(() {
       if (pickedFile != null) {
@@ -286,7 +292,11 @@ class _DisplayBoardGameAddState extends State<DisplayBoardGameAdd> {
                     Padding(padding: EdgeInsets.only(bottom: 10)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [boutonRetour(),boutonAjouterPhoto(), boutonValider()],
+                      children: [
+                        boutonRetour(),
+                        boutonAjouterPhoto(),
+                        boutonValider()
+                      ],
                     )
                   ],
                 ),
