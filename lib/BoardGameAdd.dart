@@ -125,7 +125,8 @@ class _DisplayBoardGameAddState extends State<DisplayBoardGameAdd> {
   final picker = ImagePicker();
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera,maxHeight:  200 , maxWidth: 200 );
+    final pickedFile = await picker.getImage(
+        source: ImageSource.camera, maxHeight: 200, maxWidth: 200);
 
     setState(() {
       if (pickedFile != null) {
